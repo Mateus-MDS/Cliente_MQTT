@@ -1,143 +1,143 @@
 LarConectado 2.0
-AutomaÁ„o Residencial Robusta com Raspberry Pi Pico W e MQTT
+Automa√ß√£o Residencial Robusta com Raspberry Pi Pico W e MQTT
 
-DescriÁ„o
-LarConectado È um sistema de automaÁ„o residencial inteligente e flexÌvel, desenvolvido com a Raspberry Pi Pico W e o protocolo MQTT (Message Queuing Telemetry Transport). Este projeto aprimora a automaÁ„o original baseada em interface web, utilizando um broker MQTT centralizado para uma comunicaÁ„o mais escal·vel e reativa.
+Descri√ß√£o
+LarConectado √© um sistema de automa√ß√£o residencial inteligente e flex√≠vel, desenvolvido com a Raspberry Pi Pico W e o protocolo MQTT (Message Queuing Telemetry Transport). Este projeto aprimora a automa√ß√£o original baseada em interface web, utilizando um broker MQTT centralizado para uma comunica√ß√£o mais escal√°vel e reativa.
 
-O sistema permite o controle remoto de l‚mpadas e de um dispositivo domÈstico (simulado por mensagens em um display OLED), alÈm de gerenciar um sistema de alarme completo com detecÁ„o de abertura de portas (via joystick) e presenÁa de pessoas prÛximas (via sensor ultrassÙnico). O alarme pode ser ativado/desativado de forma remota (via MQTT) ou manual (via bot„o fÌsico), emitindo uma sirene sonora em caso de violaÁ„o.
+O sistema permite o controle remoto de l√¢mpadas e de um dispositivo dom√©stico (simulado por mensagens em um display OLED), al√©m de gerenciar um sistema de alarme completo com detec√ß√£o de abertura de portas (via joystick) e presen√ßa de pessoas pr√≥ximas (via sensor ultrass√¥nico). O alarme pode ser ativado/desativado de forma remota (via MQTT) ou manual (via bot√£o f√≠sico), emitindo uma sirene sonora em caso de viola√ß√£o.
 
 Para feedback visual e monitoramento, o LarConectado integra:
 
-Um display OLED SSD1306 para exibir status (TV, alarme) e notificaÁıes.
-Sensores ambientais como LDR (luminosidade) e dois sensores ultrassÙnicos HC-SR04 (proximidade para automaÁ„o de luzes e detecÁ„o de intrus„o para o alarme).
-Uma matriz de LEDs 5x5 controlada via PIO para representar visualmente o estado das luzes dos cÙmodos.
-LEDs RGB frontais para simular a iluminaÁ„o de entrada com base nos sensores.
+Um display OLED SSD1306 para exibir status (TV, alarme) e notifica√ß√µes.
+Sensores ambientais como LDR (luminosidade) e dois sensores ultrass√¥nicos HC-SR04 (proximidade para automa√ß√£o de luzes e detec√ß√£o de intrus√£o para o alarme).
+Uma matriz de LEDs 5x5 controlada via PIO para representar visualmente o estado das luzes dos c√¥modos.
+LEDs RGB frontais para simular a ilumina√ß√£o de entrada com base nos sensores.
 Monitoramento da temperatura interna do chip RP2040.
-A interaÁ„o com o sistema È realizada atravÈs de um aplicativo de dashboard MQTT (ex: "IoT MQTT Dashboard"), que fornece uma interface com botıes de controle e visualizaÁıes de dados em tempo real, como um gr·fico da temperatura.
+A intera√ß√£o com o sistema √© realizada atrav√©s de um aplicativo de dashboard MQTT (ex: "IoT MQTT Dashboard"), que fornece uma interface com bot√µes de controle e visualiza√ß√µes de dados em tempo real, como um gr√°fico da temperatura.
 
 Objetivos:
-Controlar remotamente o estado de l‚mpadas em m˙ltiplos cÙmodos e um dispositivo simulado (TV) via mensagens MQTT.
+Controlar remotamente o estado de l√¢mpadas em m√∫ltiplos c√¥modos e um dispositivo simulado (TV) via mensagens MQTT.
 Exibir dados de telemetria (temperatura interna da Pico W, status de alarme) para clientes MQTT.
-Monitorar condiÁıes ambientais (luminosidade com LDR e presenÁa com sensor ultrassÙnico) para automaÁıes de luzes.
-Representar graficamente o status das luzes dos cÙmodos em uma matriz de LEDs 5x5 via PIO.
-Exibir status e notificaÁıes no display OLED SSD1306.
-Implementar um sistema de alarme com ativaÁ„o/desativaÁ„o remota (MQTT) e manual (bot„o fÌsico), acionando uma sirene (buzzer) em caso de detecÁ„o de movimento (joystick) ou presenÁa (sensor ultrassÙnico).
+Monitorar condi√ß√µes ambientais (luminosidade com LDR e presen√ßa com sensor ultrass√¥nico) para automa√ß√µes de luzes.
+Representar graficamente o status das luzes dos c√¥modos em uma matriz de LEDs 5x5 via PIO.
+Exibir status e notifica√ß√µes no display OLED SSD1306.
+Implementar um sistema de alarme com ativa√ß√£o/desativa√ß√£o remota (MQTT) e manual (bot√£o f√≠sico), acionando uma sirene (buzzer) em caso de detec√ß√£o de movimento (joystick) ou presen√ßa (sensor ultrass√¥nico).
 Utilizar um broker MQTT (Mosquitto) para desacoplar a interface de controle do dispositivo embarcado.
-Prover uma interface de usu·rio rica atravÈs de um aplicativo de dashboard MQTT com botıes interativos e gr·ficos de dados.
+Prover uma interface de usu√°rio rica atrav√©s de um aplicativo de dashboard MQTT com bot√µes interativos e gr√°ficos de dados.
 
 Componentes Utilizados:
-Componente	Pinos	FunÁ„o
+Componente	Pinos	Fun√ß√£o
 Raspberry Pi Pico W	-	Microcontrolador com Wi-Fi, executando o cliente MQTT.
-Display OLED SSD1306	I2C1 ? GP14 (SDA), GP15 (SCL)	ExibiÁ„o local de status (TV, alarme: ligado/desligado/acionado) e notificaÁıes.
-Sensor UltrassÙnico_1 HC-SR04	GP8 (TRIG), GP9 (ECHO)	DetecÁ„o de proximidade para automaÁ„o das luzes RGB frontais.
-Sensor UltrassÙnico_2 HC-SR04	GP18 (TRIG), GP19 (ECHO)	DetecÁ„o de proximidade para acionamento do alarme (se ativado).
-Sensor de Luminosidade (LDR)	GPIO16	DetecÁ„o de luz ambiente para automaÁ„o das luzes RGB frontais.
-Matriz de LEDs 5◊5	PIO ? GP7	VisualizaÁ„o gr·fica em tempo real do status das luzes dos cÙmodos.
+Display OLED SSD1306	I2C1 ? GP14 (SDA), GP15 (SCL)	Exibi√ß√£o local de status (TV, alarme: ligado/desligado/acionado) e notifica√ß√µes.
+Sensor Ultrass√¥nico_1 HC-SR04	GP8 (TRIG), GP9 (ECHO)	Detec√ß√£o de proximidade para automa√ß√£o das luzes RGB frontais.
+Sensor Ultrass√¥nico_2 HC-SR04	GP18 (TRIG), GP19 (ECHO)	Detec√ß√£o de proximidade para acionamento do alarme (se ativado).
+Sensor de Luminosidade (LDR)	GPIO16	Detec√ß√£o de luz ambiente para automa√ß√£o das luzes RGB frontais.
+Matriz de LEDs 5√ó5	PIO ? GP7	Visualiza√ß√£o gr√°fica em tempo real do status das luzes dos c√¥modos.
 Buzzer	GP21	Emite a sirene sonora do alarme quando acionado.
-Bot„o A	GP5	AtivaÁ„o e desativaÁ„o manual do alarme.
-Joystick	GP26 (ADC0 - Eixo X), GP27 (ADC1 - Eixo Y)	Simula a detecÁ„o de movimento/abertura em portas para o sistema de alarme.
-LEDs RGB de Status	GPIO11, GPIO12, GPIO13	Representam uma l‚mpada externa de entrada, com acendimento autom·tico baseado em condiÁıes de escuro (LDR) e proximidade (UltrassÙnico_1).
-LED WiFi	CYW43 embutido	Feedback visual do status da conex„o Wi-Fi.
+Bot√£o A	GP5	Ativa√ß√£o e desativa√ß√£o manual do alarme.
+Joystick	GP26 (ADC0 - Eixo X), GP27 (ADC1 - Eixo Y)	Simula a detec√ß√£o de movimento/abertura em portas para o sistema de alarme.
+LEDs RGB de Status	GPIO11, GPIO12, GPIO13	Representam uma l√¢mpada externa de entrada, com acendimento autom√°tico baseado em condi√ß√µes de escuro (LDR) e proximidade (Ultrass√¥nico_1).
+LED WiFi	CYW43 embutido	Feedback visual do status da conex√£o Wi-Fi.
 Mosquitto Broker	Host de rede (ex: 10.20.20.16)	Servidor MQTT central que gerencia e distribui as mensagens entre o Pico W e as interfaces de controle (aplicativos/dashboards). Neste projeto, simulado via Termux em Android.
-IoT MQTT Dashboard App	Smartphone/Tablet	Interface de usu·rio mÛvel para controle e monitoramento remoto. Permite acionar dispositivos via botıes e visualizar dados de sensores (como temperatura em gr·fico) em tempo real, comunicando-se via MQTT.
+IoT MQTT Dashboard App	Smartphone/Tablet	Interface de usu√°rio m√≥vel para controle e monitoramento remoto. Permite acionar dispositivos via bot√µes e visualizar dados de sensores (como temperatura em gr√°fico) em tempo real, comunicando-se via MQTT.
 
 Funcionamento:
-InicializaÁ„o
-ConfiguraÁ„o de GPIOs, ADCs, PIO e perifÈricos (ssd1306, buzzer, joystick).
-InicializaÁ„o do display OLED.
-Conex„o ‡ rede Wi-Fi.
-ResoluÁ„o DNS do endereÁo do broker MQTT.
-InicializaÁ„o do cliente MQTT e conex„o ao broker.
-InscriÁ„o nos tÛpicos de comando (/luz_sala, /alarme, etc.).
-PublicaÁ„o do estado online = 1 (Last Will).
-InteraÁ„o MQTT
-Comandos de Controle: O Raspberry Pi Pico W assina tÛpicos como /luz_sala, /display, /alarme. Quando um cliente MQTT (ex: o aplicativo IoT MQTT Dashboard) publica mensagens nesses tÛpicos (e.g., "On", "Off", "1"), o Pico W recebe o comando e atualiza o estado do dispositivo correspondente (liga/desliga LED, altera status do display/alarme).
+Inicializa√ß√£o
+Configura√ß√£o de GPIOs, ADCs, PIO e perif√©ricos (ssd1306, buzzer, joystick).
+Inicializa√ß√£o do display OLED.
+Conex√£o √† rede Wi-Fi.
+Resolu√ß√£o DNS do endere√ßo do broker MQTT.
+Inicializa√ß√£o do cliente MQTT e conex√£o ao broker.
+Inscri√ß√£o nos t√≥picos de comando (/luz_sala, /alarme, etc.).
+Publica√ß√£o do estado online = 1 (Last Will).
+Intera√ß√£o MQTT
+Comandos de Controle: O Raspberry Pi Pico W assina t√≥picos como /luz_sala, /display, /alarme. Quando um cliente MQTT (ex: o aplicativo IoT MQTT Dashboard) publica mensagens nesses t√≥picos (e.g., "On", "Off", "1"), o Pico W recebe o comando e atualiza o estado do dispositivo correspondente (liga/desliga LED, altera status do display/alarme).
 
-PublicaÁ„o de Status: O Pico W publica o estado atual de seus dispositivos e sensores em tÛpicos especÌficos:
-/luz_[comodo]/state: "On" ou "Off" para cada LED de cÙmodo.
+Publica√ß√£o de Status: O Pico W publica o estado atual de seus dispositivos e sensores em t√≥picos espec√≠ficos:
+/luz_[comodo]/state: "On" ou "Off" para cada LED de c√¥modo.
 /display/state: "On" ou "Off" para o display (representando a TV).
 /alarme/state: "On" (ligado) ou "Off" (desligado) para o alarme.
-/alarme/acionado: "VIOLACAO" ou "SEM VIOLACAO" em caso de detecÁ„o de intrus„o.
+/alarme/acionado: "VIOLACAO" ou "SEM VIOLACAO" em caso de detec√ß√£o de intrus√£o.
 /temperature: Valor da temperatura interna do RP2040.
 /online: "1" (quando conectado) ou "0" (Last Will, se desconectado inesperadamente).
 /uptime: Tempo de atividade do sistema.
 
-Interface de Controle (IoT MQTT Dashboard): O aplicativo no smartphone/tablet se conecta ao mesmo broker Mosquitto. Ele possui botıes configurados para publicar comandos e painÈis/gr·ficos configurados para assinar os tÛpicos de status, exibindo os dados em tempo real.
+Interface de Controle (IoT MQTT Dashboard): O aplicativo no smartphone/tablet se conecta ao mesmo broker Mosquitto. Ele possui bot√µes configurados para publicar comandos e pain√©is/gr√°ficos configurados para assinar os t√≥picos de status, exibindo os dados em tempo real.
 Leitura e Monitoramento
-Sensor UltrassÙnico_1: Mede a dist‚ncia periodicamente para automaÁ„o das luzes RGB frontais (combinaÁ„o com LDR).
-Sensor UltrassÙnico_2: Mede a dist‚ncia periodicamente para o sistema de alarme, detectando presenÁa prÛxima.
-Sensor LDR: Leitura analÛgica para avaliar a luminosidade ambiente, influenciando o acendimento das luzes RGB frontais.
-Joystick: Leitura dos valores analÛgicos dos eixos X e Y para detectar mudanÁas de posiÁ„o, simulando a abertura de portas para o alarme.
-Temperatura Interna: Leitura do sensor tÈrmico do RP2040 publicada via MQTT.
+Sensor Ultrass√¥nico_1: Mede a dist√¢ncia periodicamente para automa√ß√£o das luzes RGB frontais (combina√ß√£o com LDR).
+Sensor Ultrass√¥nico_2: Mede a dist√¢ncia periodicamente para o sistema de alarme, detectando presen√ßa pr√≥xima.
+Sensor LDR: Leitura anal√≥gica para avaliar a luminosidade ambiente, influenciando o acendimento das luzes RGB frontais.
+Joystick: Leitura dos valores anal√≥gicos dos eixos X e Y para detectar mudan√ßas de posi√ß√£o, simulando a abertura de portas para o alarme.
+Temperatura Interna: Leitura do sensor t√©rmico do RP2040 publicada via MQTT.
 
-Estrutura do CÛdigo:
+Estrutura do C√≥digo:
 Wi-Fi & lwIP Setup:
 Inicializa a interface de rede (CYW43).
-Conecta-se ‡ rede Wi-Fi.
-Realiza a resoluÁ„o DNS do broker MQTT.
+Conecta-se √† rede Wi-Fi.
+Realiza a resolu√ß√£o DNS do broker MQTT.
 
 MQTT Client:
-Cria e gerencia a conex„o MQTT.
-Define callbacks para conex„o, recebimento de mensagens (tÛpico e dados) e confirmaÁ„o de publicaÁıes/inscriÁıes.
-Gerencia a publicaÁ„o de estados e telemetria.
+Cria e gerencia a conex√£o MQTT.
+Define callbacks para conex√£o, recebimento de mensagens (t√≥pico e dados) e confirma√ß√£o de publica√ß√µes/inscri√ß√µes.
+Gerencia a publica√ß√£o de estados e telemetria.
 
 Drivers:
-OLED SSD1306 via I≤C.
+OLED SSD1306 via I¬≤C.
 Matriz de LEDs via PIO.
-Leitura de ADCs (LDR, Joystick, Temperatura Interna) e sensores digitais (UltrassÙnicos, Bot„o).
+Leitura de ADCs (LDR, Joystick, Temperatura Interna) e sensores digitais (Ultrass√¥nicos, Bot√£o).
 
-LÛgica de Controle:
-FunÁıes para ligar/desligar LEDs, TV (display).
-FunÁıes para o sistema de alarme (ativaÁ„o/desativaÁ„o, detecÁ„o de violaÁ„o, acionamento do buzzer).
-LÛgica para luzes autom·ticas frontais.
+L√≥gica de Controle:
+Fun√ß√µes para ligar/desligar LEDs, TV (display).
+Fun√ß√µes para o sistema de alarme (ativa√ß√£o/desativa√ß√£o, detec√ß√£o de viola√ß√£o, acionamento do buzzer).
+L√≥gica para luzes autom√°ticas frontais.
 
 Main Loop:
 Processa eventos de rede (CYW43_arch_poll).
 Atualiza leituras de sensores.
 Atualiza OLED e LED matrix.
-Verifica e processa a lÛgica do Alarme.
+Verifica e processa a l√≥gica do Alarme.
 Publica periodicamente estados e dados de sensores.
 
 Como Executar o Projeto:
-Montagem: Monte os componentes eletrÙnicos conforme a tabela de pinos e as especificaÁıes do seu hardware.
-ConfiguraÁ„o do Mosquitto Broker:
+Montagem: Monte os componentes eletr√¥nicos conforme a tabela de pinos e as especifica√ß√µes do seu hardware.
+Configura√ß√£o do Mosquitto Broker:
 Em um dispositivo Android, instale o aplicativo Termux.
 No Termux, instale o Mosquitto: pkg install mosquitto. Inicio e configure.
-Anote o endereÁo IP do seu dispositivo Android para configurar o MQTT_SERVER no cÛdigo da Pico W.
+Anote o endere√ßo IP do seu dispositivo Android para configurar o MQTT_SERVER no c√≥digo da Pico W.
 
-ConfiguraÁ„o do Firmware da Pico W:
-Configure suas credenciais de Wi-Fi (WIFI_SSID, WIFI_PASSWORD) no cÛdigo-fonte.
-Configure o endereÁo IP do seu Mosquitto Broker (MQTT_SERVER, MQTT_USERNAME, MQTT_PASSWORD) no cÛdigo.
+Configura√ß√£o do Firmware da Pico W:
+Configure suas credenciais de Wi-Fi (WIFI_SSID, WIFI_PASSWORD) no c√≥digo-fonte.
+Configure o endere√ßo IP do seu Mosquitto Broker (MQTT_SERVER, MQTT_USERNAME, MQTT_PASSWORD) no c√≥digo.
 
-CompilaÁ„o e GravaÁ„o:
+Compila√ß√£o e Grava√ß√£o:
 Certifique-se de ter o SDK do Raspberry Pi Pico configurado.
 Compile o firmware (.uf2) do projeto.
 Grave o firmware compilado na sua Raspberry Pi Pico W.
 
-ConfiguraÁ„o do IoT MQTT Dashboard:
+Configura√ß√£o do IoT MQTT Dashboard:
 Instale o aplicativo "IoT MQTT Dashboard" (ou similar) em seu smartphone/tablet.
-Configure uma nova conex„o apontando para o IP do seu Mosquitto Broker.
-Crie botıes e painÈis/gr·ficos no aplicativo, configurando-os para publicar e assinar os tÛpicos MQTT conforme a lÛgica do seu projeto (ex: publicar "On" em /luz_sala, assinar /temperature para o gr·fico).
+Configure uma nova conex√£o apontando para o IP do seu Mosquitto Broker.
+Crie bot√µes e pain√©is/gr√°ficos no aplicativo, configurando-os para publicar e assinar os t√≥picos MQTT conforme a l√≥gica do seu projeto (ex: publicar "On" em /luz_sala, assinar /temperature para o gr√°fico).
 
-InteraÁ„o:
+Intera√ß√£o:
 Aguarde a Pico W conectar-se ao Wi-Fi e ao broker MQTT.
 Use o aplicativo IoT MQTT Dashboard para controlar LEDs, acionar/desativar o alarme e visualizar os dados dos sensores em tempo real.
 
 Requisitos:
 Raspberry Pi Pico W
 SDK do Raspberry Pi Pico configurado
-Display OLED compatÌvel com SSD1306
+Display OLED compat√≠vel com SSD1306
 Sensor LDR
-Sensor UltrassÙnico HC-SR04 (x2)
-Matriz de LEDs 5◊5
+Sensor Ultrass√¥nico HC-SR04 (x2)
+Matriz de LEDs 5√ó5
 Buzzer
-Bot„o
+Bot√£o
 Joystick
 Dispositivo Android com Termux para rodar o Mosquitto Broker (ou um Mosquitto Broker em outro PC/servidor)
 Aplicativo "IoT MQTT Dashboard" (ou similar) para smartphone/tablet
 
-RepositÛrio:
-GitHub: 
+Reposit√≥rio:
+GitHub: https://github.com/Mateus-MDS/Cliente_MQTT.git
 
 Autor
 Nome: Mateus Moreira da Silva
